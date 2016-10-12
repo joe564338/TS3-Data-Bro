@@ -5,7 +5,7 @@ Harxer2DTemplate
 ================
 
 	main.engine.HXStartup
--> Where the main method resides
+-> Where the main method resides 
 • Static reference to singleton HXMasterWindow and instantiates
 _________________
 	ui.HXMasterWindow:
