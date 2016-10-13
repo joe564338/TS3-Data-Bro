@@ -85,9 +85,13 @@ public class HXViewPanel extends JPanel {
 		if (xAccel > 0 || yAccel > 0) {
 			double wX = worldPanel.getLocation().getX() + xAccel * xDirectionModifier;
 			double wY = worldPanel.getLocation().getY() + yAccel * yDirectionModifier;
-			wX = Math.max(Math.min(wX, 0), -(HXWorld.WORLD_WIDTH - this.getWidth()));
-			wY = Math.max(Math.min(wY, 0), -(HXWorld.WORLD_HEIGHT - this.getHeight()));
+			wX = Math.max(Math.min(wX, 0), -(worldPanel.getWorld().getScaledWidth() - this.getWidth()));
+			wY = Math.max(Math.min(wY, 0), -(worldPanel.getWorld().getScaledHeight() - this.getHeight()));
 			worldPanel.setLocation((int) wX, (int) wY);
 		}
+	}
+	
+	public HXWorldPanel getWorldPanel() {
+		return this.worldPanel;
 	}
 }

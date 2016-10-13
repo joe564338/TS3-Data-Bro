@@ -5,14 +5,18 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import main.engine.HXClockUpdater;
 import ui.HXViewPanel;
 import ui.HXWorldPanel;
-import world.entities.HXEntityTemplate;
+import world.entities.MapSpace;
 
 public class HXWorld implements HXClockUpdater{
 	
 	// HXViewPanel allows a world to be larger than its parent window 
 	// as it can be scrolled and moved like a camera's perspective.
-	public static final int WORLD_WIDTH = 2000;
-	public static final int WORLD_HEIGHT = 1000;
+	public static final int WORLD_WIDTH = 1425;
+	public static final int WORLD_HEIGHT = 742;
+	
+	/* === Zooming variables === */
+	private double scaledWidth;
+	private double scaledHeight;
 	
 	/* === Updates and drawing === */
 	private final CopyOnWriteArrayList<HXEntity> entities = new CopyOnWriteArrayList<HXEntity>();
@@ -25,12 +29,14 @@ public class HXWorld implements HXClockUpdater{
 	 */
 	public HXWorld(HXWorldPanel parentPanel) {
 		this.parentPanel = parentPanel;
+		this.scaledWidth = parentPanel.getZoom() * WORLD_WIDTH;
+		this.scaledHeight = parentPanel.getZoom() * WORLD_HEIGHT;
 		
 		// Run anything at start of world...
-		for (int x = 0; x < WORLD_WIDTH/50; x++) {
-			for (int y = 0; y < WORLD_HEIGHT/50; y++) {
+		for (int x = 0; x < 57; x++) {
+			for (int y = 0; y < 53; y++) {
 				// This is making the visual grid in the world
-				new HXEntityTemplate(x*50, y*50, 0, 0, this);
+				new MapSpace(x*25, y*14, x, y, 0, 0, this);
 			}
 		}
 		
@@ -54,6 +60,13 @@ public class HXWorld implements HXClockUpdater{
 	public HXWorldPanel getParentPanel() {
 		return parentPanel;
 	}
+	
+	public void updateZoom(double zoom) {
+		scaledWidth = WORLD_WIDTH * zoom;
+		scaledHeight = WORLD_HEIGHT * zoom;
+		for (HXEntity e : entities)
+			e.rescaleSize(zoom);
+	}
 
 	@Override
 	public void updateEntities() {
@@ -62,6 +75,25 @@ public class HXWorld implements HXClockUpdater{
 		x.update();
 		
 		for (HXEntity e : entities)
-			e.update();
+			if (e.getWidth()*parentPanel.getZoom() != 0 || e.getHeight()*parentPanel.getZoom() != 0)
+				e.update();
 	}
+
+	public double getScaledWidth() {
+		return scaledWidth;
+	}
+
+	public void setScaledWidth(double scaledWidth) {
+		this.scaledWidth = scaledWidth;
+	}
+
+	public double getScaledHeight() {
+		return scaledHeight;
+	}
+
+	public void setScaledHeight(double scaledHeight) {
+		this.scaledHeight = scaledHeight;
+	}
+	
+	
 }

@@ -14,7 +14,7 @@ public class HXStartup {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-//					new HXImageLoader();
+					new HXImageLoader();
 					masterWindow = new HXMasterWindow();
 					masterWindow.pack();
 					masterWindow.setVisible(true);

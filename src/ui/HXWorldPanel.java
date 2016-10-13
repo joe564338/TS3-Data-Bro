@@ -1,6 +1,7 @@
 package ui;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
@@ -31,14 +32,17 @@ public class HXWorldPanel extends JPanel implements HXClockRenderer, MouseListen
 	/* === world === */
 	private HXWorld world;
 	
+	private double zoom = 0.5;
+	
 	/**
 	 * Extension of a JPanel that contains an HXWorld and paints all of this object's entities.
 	 */
 	public HXWorldPanel(int worldStartX, int worldStartY) {
 		setLayout(null);
-		setBounds(-worldStartX, -worldStartY, HXWorld.WORLD_WIDTH, HXWorld.WORLD_HEIGHT);
+		setBounds(-worldStartX, -worldStartY, (int) (HXWorld.WORLD_WIDTH * zoom), (int) (HXWorld.WORLD_HEIGHT * zoom));
 		addMouseListener(this);
 		addMouseMotionListener(this);
+		
 		
 		world = new HXWorld(this);
 		clock = new HXClock(this);
@@ -134,5 +138,29 @@ public class HXWorldPanel extends JPanel implements HXClockRenderer, MouseListen
 	public void mouseMoved(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public double getZoom() {
+		return zoom;
+	}
+
+	public void setZoom(double zoom) {
+		this.zoom = zoom;
+		world.updateZoom(zoom);
+		this.setSize(new Dimension((int) (HXWorld.WORLD_WIDTH * zoom), (int) (HXWorld.WORLD_HEIGHT * zoom)));
+	}
+	public void incrementZoom() {
+		if (zoom < 5) {
+			zoom += 0.25;
+			world.updateZoom(zoom);
+			this.setSize(new Dimension((int) (HXWorld.WORLD_WIDTH * zoom), (int) (HXWorld.WORLD_HEIGHT * zoom)));
+		}
+	}
+	public void decrementZoom() {
+		if (zoom > 0.5) {
+			zoom -= 0.25;
+			world.updateZoom(zoom);
+			this.setSize(new Dimension((int) (HXWorld.WORLD_WIDTH * zoom), (int) (HXWorld.WORLD_HEIGHT * zoom)));
+		}
 	}
 }

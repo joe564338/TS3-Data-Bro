@@ -12,7 +12,7 @@ public class HXImageLoader {
 	public HXImageLoader() {
 		 try 
 		    {                
-			 image_HXTemplate = ImageIO.read(HXImageLoader.class.getResourceAsStream("/resources/image.png")); 
+			 image_HXTemplate = ImageIO.read(HXImageLoader.class.getResourceAsStream("/resources/map.png")); 
 		    } 
 		    catch (IOException e) 
 		    { 

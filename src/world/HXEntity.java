@@ -13,12 +13,15 @@ public abstract class HXEntity {
 	private double yPos;
 	private double height;
 	private double width;
+	private double scaledHeight;
+	private double scaledWidth;
 	private Rectangle rect;
 	private double mass;
 	private HXWorld parentWorld;
 	private double lifespan; // an entity with -1 lifespan will not decay
 	private double xVel;
 	private double yVel;
+	private double scale;
 	
 	private double LIFESPAN_DECAY = 0;// 0.04;
 	private double FRICTION = 0;//0.05;
@@ -40,6 +43,8 @@ public abstract class HXEntity {
 		this.yPos = y;
 		this.height = h;
 		this.width = w;
+		this.scaledHeight = h * parent.getParentPanel().getZoom();
+		this.scaledWidth = w * parent.getParentPanel().getZoom();
 		this.mass = m;
 		this.xPos_prev = x;
 		this.yPos_prev = y;
@@ -49,6 +54,7 @@ public abstract class HXEntity {
 		this.parentWorld.getEntities().add(0, this);
 		this.xVel = velX;
 		this.yVel = velY;
+		this.scale = parent.getParentPanel().getZoom();
 	}
 	
 	/**
@@ -84,13 +90,20 @@ public abstract class HXEntity {
 		yVel = Math.max( yVel - FRICTION, 0);
 		
 		if (lifespan != -1) {
-			lifespan -= LIFESPAN_DECAY;
 			if (lifespan <= 0) {
 				remove();
+			} else {
+				lifespan -= LIFESPAN_DECAY;
 			}
 		}
 		
 		// TODO Change xPos or yPos variables for movement
+	}
+	
+	public void rescaleSize(double zoom) {
+		scaledHeight = height * zoom;
+		scaledWidth = width * zoom;
+		scale = zoom;
 	}
 	
 	/**
@@ -183,5 +196,20 @@ public abstract class HXEntity {
 	}
 	public void setyVel(double yVel) {
 		this.yVel = yVel;
+	}
+	public double getScaledHeight() {
+		return scaledHeight;
+	}
+	public void setScaledHeight(double scaledHeight) {
+		this.scaledHeight = scaledHeight;
+	}
+	public double getScaledWidth() {
+		return scaledWidth;
+	}
+	public void setScaledWidth(double scaledWidth) {
+		this.scaledWidth = scaledWidth;
+	}
+	public double getScale() {
+		return this.scale;
 	}
 }

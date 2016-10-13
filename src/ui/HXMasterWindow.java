@@ -11,15 +11,17 @@ import java.awt.event.ActionEvent;
 import java.awt.Color;
 
 import input.HXKey;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
 
 public class HXMasterWindow extends JFrame {
 	
 	// The dimensions of the window
-	public static final int WINDOW_WIDTH = 800;
-	public static final int WINDOW_HEIGHT = 394;
+	public static final int WINDOW_WIDTH = 712;
+	public static final int WINDOW_HEIGHT = 428;
 	// The dimensions of the panel where the world is rendered
-	public static final int VIEWPANEL_WIDTH = 800;
-	public static final int VIEWPANEL_HEIGHT = 336;
+	public static final int VIEWPANEL_WIDTH = 712;
+	public static final int VIEWPANEL_HEIGHT = 371;
 	
 	/**
 	 * The primary window for the application.
@@ -44,10 +46,29 @@ public class HXMasterWindow extends JFrame {
 		setMinimumSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
 		setResizable(false);
 		
-		
 		// The viewpanel that renders the 2D world
-		HXViewPanel viewPanel = new HXViewPanel(VIEWPANEL_WIDTH, VIEWPANEL_HEIGHT, 200, 100);
+		HXViewPanel viewPanel = new HXViewPanel(VIEWPANEL_WIDTH, VIEWPANEL_HEIGHT, 0, 0);
 		getContentPane().add(viewPanel);
+		
+		// Other user interface components...
+		JButton button = new JButton("-");
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				viewPanel.getWorldPanel().decrementZoom();
+			}
+		});
+		button.setBounds(3, 374, 30, 30);
+		getContentPane().add(button);
+		
+		JButton button_1 = new JButton("+");
+		button_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				viewPanel.getWorldPanel().incrementZoom();
+			}
+		});
+		button_1.setBounds(36, 374, 30, 30);
+		getContentPane().add(button_1);
+		// ...
 		
 		
 		// === Initialize key bindings for keys listed in the HXKey.KEYS HashMap ===
