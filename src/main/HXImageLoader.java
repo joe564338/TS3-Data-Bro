@@ -7,12 +7,12 @@ import javax.imageio.ImageIO;
 
 public class HXImageLoader {
 	
-	public static BufferedImage image_HXTemplate;
+	public static BufferedImage mapImage;
 	
 	public HXImageLoader() {
 		 try 
 		    {                
-			 image_HXTemplate = ImageIO.read(HXImageLoader.class.getResourceAsStream("/resources/map.png")); 
+			 mapImage = ImageIO.read(HXImageLoader.class.getResourceAsStream("/resources/map.png")); 
 		    } 
 		    catch (IOException e) 
 		    { 

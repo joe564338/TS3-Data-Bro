@@ -11,21 +11,15 @@ public abstract class HXEntity {
 	private int lastDraw_yPos;
 	private double xPos;
 	private double yPos;
-	private double height;
-	private double width;
-	private double scaledHeight;
-	private double scaledWidth;
+	private int height;
+	private int width;
+	private int scaledHeight;
+	private int scaledWidth;
 	private Rectangle rect;
-	private double mass;
 	private HXWorld parentWorld;
-	private double lifespan; // an entity with -1 lifespan will not decay
-	private double xVel;
-	private double yVel;
-	private double scale;
-	
-	private double LIFESPAN_DECAY = 0;// 0.04;
-	private double FRICTION = 0;//0.05;
-	
+	private int xPan = 0;
+	private int yPan = 0;
+	private int scale;
 	
 	/**
 	 * The constructors of the classes in the 'entities' package should call this init() method.
@@ -38,22 +32,18 @@ public abstract class HXEntity {
 	 * @param m - mass of entity.
 	 * @param parent - HXWorld this entity will belong to.
 	 */
-	protected void init(double x, double y, double w, double h, double velX, double velY, double m, double life, HXWorld parent) {
+	protected void init(double x, double y, int w, int h, HXWorld parent) {
 		this.xPos = x;
 		this.yPos = y;
 		this.height = h;
 		this.width = w;
-		this.scaledHeight = h * parent.getParentPanel().getZoom();
-		this.scaledWidth = w * parent.getParentPanel().getZoom();
-		this.mass = m;
+		this.scaledHeight = (int) (h * parent.getParentPanel().getZoom());
+		this.scaledWidth = (int) (w * parent.getParentPanel().getZoom());
 		this.xPos_prev = x;
 		this.yPos_prev = y;
-		this.lifespan = life;
 		this.rect = new Rectangle((int) xPos, (int) yPos, (int) width, (int) height); 
 		this.parentWorld = parent;
 		this.parentWorld.getEntities().add(0, this);
-		this.xVel = velX;
-		this.yVel = velY;
 		this.scale = parent.getParentPanel().getZoom();
 	}
 	
@@ -71,7 +61,7 @@ public abstract class HXEntity {
 		setLastDraw_xPos(drawX);
 		setLastDraw_yPos(drawY);
 		// draw() updates Rectangle location with where it visually is rendered
-		rect.setLocation((int) xPos, (int) yPos); 
+//		rect.setLocation((int) xPos, (int) yPos); 
 	}
 	
 	/**
@@ -80,30 +70,18 @@ public abstract class HXEntity {
 	 * Used in conjunction with another class changing an entity's x or y positions.
 	 */
 	public void update() {
-		setxPos_Prev(getxPos());
-		setyPos_Prev(getyPos());
 		
-		xPos += xVel;
-		yPos += yVel;
-		
-		xVel = Math.max( xVel - FRICTION, 0);
-		yVel = Math.max( yVel - FRICTION, 0);
-		
-		if (lifespan != -1) {
-			if (lifespan <= 0) {
-				remove();
-			} else {
-				lifespan -= LIFESPAN_DECAY;
-			}
-		}
-		
-		// TODO Change xPos or yPos variables for movement
 	}
 	
-	public void rescaleSize(double zoom) {
+	public void rescaleSize(int zoom) {
 		scaledHeight = height * zoom;
 		scaledWidth = width * zoom;
 		scale = zoom;
+	}
+	
+	public void panShift(int xS, int yS) {
+		this.xPan = xS;
+		this.yPan = yS;
 	}
 	
 	/**
@@ -152,17 +130,29 @@ public abstract class HXEntity {
 	public void setyPos_Prev(double prevY) {
 		this.yPos_prev = prevY;
 	}
-	public double getHeight() {
+	public int getHeight() {
 		return height;
 	}
-	public void setHeight(double height) {
+	public void setHeight(int height) {
 		this.height = height;
 	}
-	public double getWidth() {
+	public int getWidth() {
 		return width;
 	}
-	public void setWidth(double width) {
+	public void setWidth(int width) {
 		this.width = width;
+	}
+	public int getScaledHeight() {
+		return scaledHeight;
+	}
+	public void setScaledHeight(int scaledHeight) {
+		this.scaledHeight = scaledHeight;
+	}
+	public int getScaledWidth() {
+		return scaledWidth;
+	}
+	public void setScaledWidth(int scaledWidth) {
+		this.scaledWidth = scaledWidth;
 	}
 	public Rectangle getRect() {
 		return rect;
@@ -170,46 +160,17 @@ public abstract class HXEntity {
 	public void setRect(Rectangle rect) {
 		this.rect = rect;
 	}
-	public Double getMass() {
-		return mass;
-	}
-	public void setMass(double mass) {
-		this.mass = mass;
-	}
 	public HXWorld getWorld() {
 		return parentWorld;
 	}
-	public Double getLifespan() {
-		return lifespan;
-	}
-	public void setLifespan(double lifespan) {
-		this.lifespan = lifespan;
-	}
-	public double getxVel() {
-		return xVel;
-	}
-	public void setxVel(double xVel) {
-		this.xVel = xVel;
-	}
-	public double getyVel() {
-		return yVel;
-	}
-	public void setyVel(double yVel) {
-		this.yVel = yVel;
-	}
-	public double getScaledHeight() {
-		return scaledHeight;
-	}
-	public void setScaledHeight(double scaledHeight) {
-		this.scaledHeight = scaledHeight;
-	}
-	public double getScaledWidth() {
-		return scaledWidth;
-	}
-	public void setScaledWidth(double scaledWidth) {
-		this.scaledWidth = scaledWidth;
-	}
-	public double getScale() {
+	public int getScale() {
 		return this.scale;
 	}
+	public int getxPan() {
+		return xPan;
+	}
+	public int getyPan() {
+		return yPan;
+	}
+	
 }

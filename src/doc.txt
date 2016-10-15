@@ -22,7 +22,7 @@ ui.HXMasterWindow:
 		• Add to the static HashMap to listen for
 		  more keyboard presses
 	______________
-	ui.HXViewPanel:
+	ui.HXViewPanel: (Deprecated - Now only uses a HXWorldPanel with all entities shifted)
 		-> Owns a panel where the 2D world’s entities 
 		   are drawn subclassed as HXWorldPanel. Also 
 		   handles the panning of that world with the 

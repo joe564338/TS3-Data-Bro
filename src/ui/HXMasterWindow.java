@@ -3,16 +3,16 @@ package ui;
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.KeyStroke;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.Color;
 
 import input.HXKey;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
 
 public class HXMasterWindow extends JFrame {
 	
@@ -46,15 +46,16 @@ public class HXMasterWindow extends JFrame {
 		setMinimumSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
 		setResizable(false);
 		
+		
 		// The viewpanel that renders the 2D world
-		HXViewPanel viewPanel = new HXViewPanel(VIEWPANEL_WIDTH, VIEWPANEL_HEIGHT, 0, 0);
-		getContentPane().add(viewPanel);
+		HXWorldPanel worldPanel = new HXWorldPanel(VIEWPANEL_WIDTH, VIEWPANEL_HEIGHT, 200, 100);
+		getContentPane().add(worldPanel);
 		
 		// Other user interface components...
 		JButton button = new JButton("-");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				viewPanel.getWorldPanel().decrementZoom();
+				worldPanel.decrementZoom();
 			}
 		});
 		button.setBounds(3, 374, 30, 30);
@@ -63,17 +64,16 @@ public class HXMasterWindow extends JFrame {
 		JButton button_1 = new JButton("+");
 		button_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				viewPanel.getWorldPanel().incrementZoom();
+				worldPanel.incrementZoom();
 			}
 		});
 		button_1.setBounds(36, 374, 30, 30);
 		getContentPane().add(button_1);
 		// ...
 		
-		
 		// === Initialize key bindings for keys listed in the HXKey.KEYS HashMap ===
-		InputMap in = viewPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-		ActionMap am = viewPanel.getActionMap();
+		InputMap in = worldPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		ActionMap am = worldPanel.getActionMap();
 		// Iterate through keys in HXKey.KEYS HashMap
 		for (String key : HXKey.KEYS.keySet()) {
 			// Put actionMapKey into inputmap and actionmap for pressed

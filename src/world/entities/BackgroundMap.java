@@ -1,15 +1,14 @@
 package world.entities;
 
-import java.awt.Color;
 import java.awt.Graphics;
 
-import world.HXClickable;
+import main.HXImageLoader;
 import world.HXEntity;
 import world.HXWorld;
 
-public class MapSpace extends HXEntity implements HXClickable{
+public class BackgroundMap extends HXEntity {
 
-	private final int DEFAULT_WIDTH = 25, DEFAULT_HEIGHT = 25;
+	private final int DEFAULT_WIDTH = 1425, DEFAULT_HEIGHT = 742;
 	
 	/**
 	 * Template for creating a new entiity. Should always override drawing, to have
@@ -21,8 +20,8 @@ public class MapSpace extends HXEntity implements HXClickable{
 	 * @param yVel
 	 * @param w
 	 */
-	public MapSpace(int xPos, int yPos, HXWorld w) {
-		init(xPos, yPos, DEFAULT_WIDTH, DEFAULT_HEIGHT, w);
+	public BackgroundMap(HXWorld w) {
+		init(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT, w);
 	}
 	
 	/**
@@ -32,8 +31,13 @@ public class MapSpace extends HXEntity implements HXClickable{
 	public void draw(Graphics g, float interpolation) {
 		super.draw(g, interpolation);
 		
-		g.setColor(Color.gray);
-		g.drawRect(getLastDraw_xPos() * getScale() + getxPan(), getLastDraw_yPos() * getScale() + getyPan(), getScaledWidth(), getScaledHeight());
+		g.drawImage( HXImageLoader.mapImage,
+				getLastDraw_xPos() * getScale() + getxPan(), 
+				getLastDraw_yPos() * getScale() + getyPan(), 
+				getScaledWidth(), 
+				getScaledHeight(), 
+				null
+		);
 	}
 
 	@Override
@@ -41,12 +45,4 @@ public class MapSpace extends HXEntity implements HXClickable{
 		super.update();
 	}
 
-	/**
-	 * From the HXClickable interface. Add functionality for what happens when the object is clicked on in world
-	 */
-	@Override
-	public void mouseIntersection() {
-		// TODO Auto-generated method stub
-		
-	}
 }

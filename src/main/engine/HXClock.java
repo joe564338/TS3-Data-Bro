@@ -127,7 +127,7 @@ public class HXClock {
 		// Benchmarking updates
 		long startTime = System.nanoTime(); 
 		
-		parentPanel.getWorld().updateEntities();
+		parentPanel.updateWorld(); //getWorld().updateEntities();
 		
 		long estimatedTime = System.nanoTime() - startTime;
 		timings.add(estimatedTime);
