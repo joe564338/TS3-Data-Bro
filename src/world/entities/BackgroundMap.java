@@ -31,7 +31,7 @@ public class BackgroundMap extends HXEntity {
 	public void draw(Graphics g, float interpolation) {
 		super.draw(g, interpolation);
 		
-		g.drawImage( HXImageLoader.mapImage,
+		g.drawImage( HXImageLoader.image_map,
 				getLastDraw_xPos() * getScale() + getxPan(), 
 				getLastDraw_yPos() * getScale() + getyPan(), 
 				getScaledWidth(), 

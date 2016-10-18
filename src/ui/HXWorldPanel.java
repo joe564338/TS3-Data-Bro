@@ -11,10 +11,12 @@ import javax.swing.*;
 import javax.swing.border.BevelBorder;
 
 import input.HXKey;
+import main.HXStartup;
 import main.engine.HXClock;
 import main.engine.HXClockRenderer;
 import world.HXEntity;
 import world.HXWorld;
+import world.entities.DataPin;
 
 public class HXWorldPanel extends JPanel implements HXClockRenderer, MouseListener, MouseMotionListener{
 	private static final long serialVersionUID = 1L;
@@ -69,10 +71,11 @@ public class HXWorldPanel extends JPanel implements HXClockRenderer, MouseListen
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		
+		// Does not properly shift when constructing a HXWorldPanel with worldStart offset
 		this.camera_pos_x = worldStartX;
 		this.camera_pos_y = worldStartY;
-		this.camera_pos_x = (camera_pos_x + this.getWidth()/2) * zoom;
-		this.camera_pos_y = (camera_pos_y + this.getHeight()/2) * zoom;
+//		this.camera_pos_x = (camera_pos_x + this.getWidth()/2) * zoom;
+//		this.camera_pos_y = (camera_pos_y + this.getHeight()/2) * zoom;
 		this.world = new HXWorld(this);
 		this.clock = new HXClock(this);
 	}
@@ -95,8 +98,11 @@ public class HXWorldPanel extends JPanel implements HXClockRenderer, MouseListen
 		g.fillRect(0, 0, getWidth(), getHeight());
 		
 		// - Entity's added to graphics
-		for (HXEntity e: world.getEntities())
-			e.draw(g, interpolation);
+//		for (HXEntity e: world.getEntities())
+//			e.draw(g, interpolation);
+		
+		for (int i = world.getEntities().size() - 1; i >= 0; i--)
+			world.getEntities().get(i).draw(g, interpolation);
 		
 //		// - Panel border
 //		g.setColor(Color.black);
@@ -190,6 +196,24 @@ public class HXWorldPanel extends JPanel implements HXClockRenderer, MouseListen
 		}
 	}
 	
+	public void addDataPoints() {
+		new Thread() {
+			public void run() {
+				for (int x = 0; x < 90; x++) {
+					new DataPin(HXStartup.rand.nextInt(HXWorld.WORLD_WIDTH), HXStartup.rand.nextInt(HXWorld.WORLD_HEIGHT), world);
+					try { Thread.sleep(20); } catch (InterruptedException e) { }
+				}
+			}
+		}.start();
+	}
+	public void clearDataPoints() {
+		for (HXEntity e : world.getEntities()) {
+			if (e instanceof DataPin) {
+				e.remove();
+			}
+		}
+	}
+	
 	public void updateWorld() {
 		updateCamera();
 		world.updateEntities();
@@ -213,6 +237,13 @@ public class HXWorldPanel extends JPanel implements HXClockRenderer, MouseListen
 	public Boolean getMousePressed() {
 		return mousePressed;
 	}
+	
+	public int getCameraPosX() {
+		return camera_pos_x;
+	}
+	public int getCameraPosY() {
+		return camera_pos_y;
+	}
 
 	@Override
 	public void repaintWorld(float withInterpolation) {
@@ -228,7 +259,7 @@ public class HXWorldPanel extends JPanel implements HXClockRenderer, MouseListen
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		world.mousePress(e.getX(), e.getY());
+		world.mousePress(e.getX() - camera_pos_x, e.getY() - camera_pos_y);
 		mousePressed = true;
 	}
 
@@ -251,7 +282,7 @@ public class HXWorldPanel extends JPanel implements HXClockRenderer, MouseListen
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		world.mousePress(e.getX(), e.getY());
+		world.mousePress(e.getX() - camera_pos_x, e.getY() - camera_pos_y);
 	}
 
 	@Override

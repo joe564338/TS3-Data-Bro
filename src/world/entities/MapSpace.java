@@ -3,11 +3,10 @@ package world.entities;
 import java.awt.Color;
 import java.awt.Graphics;
 
-import world.HXClickable;
 import world.HXEntity;
 import world.HXWorld;
 
-public class MapSpace extends HXEntity implements HXClickable{
+public class MapSpace extends HXEntity {
 
 	private final int DEFAULT_WIDTH = 25, DEFAULT_HEIGHT = 25;
 	
@@ -22,7 +21,7 @@ public class MapSpace extends HXEntity implements HXClickable{
 	 * @param w
 	 */
 	public MapSpace(int xPos, int yPos, HXWorld w) {
-		init(xPos, yPos, DEFAULT_WIDTH, DEFAULT_HEIGHT, w);
+		init(xPos - DEFAULT_WIDTH, yPos - DEFAULT_HEIGHT, DEFAULT_WIDTH, DEFAULT_HEIGHT, w);
 	}
 	
 	/**
@@ -39,14 +38,5 @@ public class MapSpace extends HXEntity implements HXClickable{
 	@Override
 	public void update() {
 		super.update();
-	}
-
-	/**
-	 * From the HXClickable interface. Add functionality for what happens when the object is clicked on in world
-	 */
-	@Override
-	public void mouseIntersection() {
-		// TODO Auto-generated method stub
-		
 	}
 }

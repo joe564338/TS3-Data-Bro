@@ -48,7 +48,7 @@ public class HXMasterWindow extends JFrame {
 		
 		
 		// The viewpanel that renders the 2D world
-		HXWorldPanel worldPanel = new HXWorldPanel(VIEWPANEL_WIDTH, VIEWPANEL_HEIGHT, 200, 100);
+		HXWorldPanel worldPanel = new HXWorldPanel(VIEWPANEL_WIDTH, VIEWPANEL_HEIGHT, 0, 0);
 		getContentPane().add(worldPanel);
 		
 		// Other user interface components...
@@ -69,6 +69,24 @@ public class HXMasterWindow extends JFrame {
 		});
 		button_1.setBounds(36, 374, 30, 30);
 		getContentPane().add(button_1);
+		
+		JButton button_2 = new JButton("Add Data Pins");
+		button_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				worldPanel.addDataPoints();
+			}
+		});
+		button_2.setBounds(69, 374, 120, 30);
+		getContentPane().add(button_2);
+		
+		JButton button_3 = new JButton("Clear Data Pins");
+		button_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				worldPanel.clearDataPoints();
+			}
+		});
+		button_3.setBounds(189, 374, 120, 30);
+		getContentPane().add(button_3);
 		// ...
 		
 		// === Initialize key bindings for keys listed in the HXKey.KEYS HashMap ===

@@ -17,8 +17,8 @@ public abstract class HXEntity {
 	private int scaledWidth;
 	private Rectangle rect;
 	private HXWorld parentWorld;
-	private int xPan = 0;
-	private int yPan = 0;
+	private int xPan;
+	private int yPan;
 	private int scale;
 	
 	/**
@@ -35,6 +35,8 @@ public abstract class HXEntity {
 	protected void init(double x, double y, int w, int h, HXWorld parent) {
 		this.xPos = x;
 		this.yPos = y;
+		this.xPan = parent.getParentPanel().getCameraPosX();
+		this.yPan = parent.getParentPanel().getCameraPosY();
 		this.height = h;
 		this.width = w;
 		this.scaledHeight = (int) (h * parent.getParentPanel().getZoom());
