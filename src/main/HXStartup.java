@@ -3,19 +3,19 @@ package main;
 import java.awt.EventQueue;
 import java.util.Random;
 
-import ui.HXMasterWindow;
+import ui.ST3MasterWindow;
 
 public class HXStartup {
 
 	public static Random rand = new Random();
-	public static HXMasterWindow masterWindow;
+	public static ST3MasterWindow masterWindow;
 
 	public static void main(String [] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					new HXImageLoader();
-					masterWindow = new HXMasterWindow();
+					masterWindow = new ST3MasterWindow();
 					masterWindow.pack();
 					masterWindow.setVisible(true);
 				} catch (Exception e) {

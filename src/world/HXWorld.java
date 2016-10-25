@@ -3,50 +3,41 @@ package world;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import main.HXStartup;
 import main.engine.HXClockUpdater;
-import ui.HXWorldPanel;
+import ui.ST3WorldPanel;
 import world.entities.*;
 
 public class HXWorld implements HXClockUpdater{
 	
-	// HXViewPanel allows a world to be larger than its parent window 
-	// as it can be scrolled and moved like a camera's perspective.
-	public static final int WORLD_WIDTH = 1425;
-	public static final int WORLD_HEIGHT = 742;
-	
-	private int widthScaled;
-	private int heightScaled;
+	private double scale = 1;
+	private int width;
+	private int height;
+	private int width_scaled;
+	private int height_scaled;
 	
 	/* === Updates and drawing === */
 	private final CopyOnWriteArrayList<HXEntity> entities = new CopyOnWriteArrayList<HXEntity>();
-	private final HXWorldPanel parentPanel;
 	
 	/**
 	 * The HXWorld object owns all entities in a CopyOnWriteArrayList but is drawn in a HXWorldPanel.
 	 * <p>
 	 * @param parentPanel - The JPanel that draws the world.
 	 */
-	public HXWorld(HXWorldPanel parentPanel) {
-		this.parentPanel = parentPanel;
-		this.widthScaled = WORLD_WIDTH * parentPanel.getZoom();
-		this.heightScaled = WORLD_HEIGHT * parentPanel.getZoom();
+	public HXWorld(int w, int h, ST3WorldPanel parentPanel) {
+		this.width = w;
+		this.height = h;
+		this.width_scaled = (int) (w * scale);
+		this.height_scaled = (int) (h * scale);
 		
 		// Run anything at start of world...
-		
 		new BackgroundMap(this);
 		
-		for (int x = 0; x < 58; x++) {
-			for (int y = 0; y < 31; y++) {
+		for (int x = 0; x < 57; x++) {
+			for (int y = 0; y < 30; y++) {
 				// This is making the visual grid in the world
 				new MapSpace(x*25, y*25, this);
 			}
 		}
-		
-//		for (int x = 0; x < 30; x++) {
-//		new DataPin(HXStartup.rand.nextInt(WORLD_WIDTH), HXStartup.rand.nextInt(WORLD_HEIGHT), this);
-//	}
-		
 		// ...
 		
 	}
@@ -67,29 +58,46 @@ public class HXWorld implements HXClockUpdater{
 		return entities;
 	}
 
-	public HXWorldPanel getParentPanel() {
-		return parentPanel;
-	}
-
 	@Override
 	public void updateEntities() {
 		for (HXEntity e : entities) {
 			e.update();
 		}
 	}
-
-	public void updateZoom(int zoom) {
-		widthScaled = WORLD_WIDTH * zoom;
-		heightScaled = WORLD_HEIGHT * zoom;
-		for (HXEntity e : entities)
-			e.rescaleSize(zoom);
-	}
 	
-	public int getWorldWidthScaled() {
-		return widthScaled;
+	public void setScale(double scale) {
+		this.scale = scale;
+		this.width_scaled = (int) (this.width * scale);
+		this.height_scaled = (int) (this.height * scale);
+		for (HXEntity e : entities) {
+			e.setDraw_scale(scale);
+		}
 	}
-
-	public int getWorldHeightScaled() {
-		return heightScaled;
+	public double getScale() {
+		return this.scale;
+	}
+	public int getWidth() {
+		return width;
+	}
+	public void setWidth(int width) {
+		this.width = width;
+	}
+	public int getHeight() {
+		return height;
+	}
+	public void setHeight(int height) {
+		this.height = height;
+	}
+	public int getWidth_scaled() {
+		return width_scaled;
+	}
+	public void setWidth_scaled(int width_scaled) {
+		this.width_scaled = width_scaled;
+	}
+	public int getHeight_scaled() {
+		return height_scaled;
+	}
+	public void setHeight_scaled(int height_scaled) {
+		this.height_scaled = height_scaled;
 	}
 }

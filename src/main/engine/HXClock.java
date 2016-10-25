@@ -7,14 +7,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import input.HXKey;
-import ui.HXWorldPanel;
+import ui.ST3WorldPanel;
 
 public class HXClock {
 	
 	public static ArrayList<Long> timings = new ArrayList<Long>();
 	public static int numberOfSecondsRun = 0;
 	
-	private HXWorldPanel parentPanel;
+	private ST3WorldPanel parentPanel;
 	
 	final float NANO_SECONDS = 1000000000;
 	Boolean appRunning = true;
@@ -27,7 +27,7 @@ public class HXClock {
 	 * Also deploys interpolation for smoother rendering. This saves CPU performance without hindering visual quality.
 	 * @param parent - HXClock requires access to the panel it is being used on in order to reference update and rendering methods within its parent.
 	 */
-	public HXClock(HXWorldPanel parent) {
+	public HXClock(ST3WorldPanel parent) {
 		this.parentPanel = parent;
 		initialize();
 	}

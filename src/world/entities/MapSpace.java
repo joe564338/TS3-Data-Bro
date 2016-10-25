@@ -21,7 +21,7 @@ public class MapSpace extends HXEntity {
 	 * @param w
 	 */
 	public MapSpace(int xPos, int yPos, HXWorld w) {
-		init(xPos - DEFAULT_WIDTH, yPos - DEFAULT_HEIGHT, DEFAULT_WIDTH, DEFAULT_HEIGHT, w);
+		init(null, xPos, yPos, DEFAULT_WIDTH, DEFAULT_HEIGHT, w);
 	}
 	
 	/**
@@ -32,11 +32,10 @@ public class MapSpace extends HXEntity {
 		super.draw(g, interpolation);
 		
 		g.setColor(Color.gray);
-		g.drawRect(getLastDraw_xPos() * getScale() + getxPan(), getLastDraw_yPos() * getScale() + getyPan(), getScaledWidth(), getScaledHeight());
-	}
-
-	@Override
-	public void update() {
-		super.update();
+		g.drawRect(
+				getDraw_xPos(), 
+				getDraw_yPos(), 
+				getDraw_width(), 
+				getDraw_height());
 	}
 }

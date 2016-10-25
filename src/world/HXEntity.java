@@ -1,25 +1,27 @@
 package world;
 
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Rectangle;
 
 public abstract class HXEntity {
 	
-	private double xPos_prev;
-	private double yPos_prev;
-	private int lastDraw_xPos;
-	private int lastDraw_yPos;
 	private double xPos;
 	private double yPos;
-	private int height;
-	private int width;
-	private int scaledHeight;
-	private int scaledWidth;
+	private double xPos_prev;
+	private double yPos_prev;
+	private int    height;
+	private int    width;
+	
 	private Rectangle rect;
 	private HXWorld parentWorld;
-	private int xPan;
-	private int yPan;
-	private int scale;
+	private Image img;
+
+	private int draw_width;
+	private int draw_height;
+	private int draw_xPos;
+	private int draw_yPos;
+	private double draw_scale;
 	
 	/**
 	 * The constructors of the classes in the 'entities' package should call this init() method.
@@ -30,40 +32,42 @@ public abstract class HXEntity {
 	 * @param w - width of entity.
 	 * @param h - height of entity.
 	 * @param m - mass of entity.
-	 * @param parent - HXWorld this entity will belong to.
+	 * @param parent - ST3World this entity will belong to.
 	 */
-	protected void init(double x, double y, int w, int h, HXWorld parent) {
+	protected void init(Image i, double x, double y, int w, int h, HXWorld parent) {
+		this.img = i;
 		this.xPos = x;
 		this.yPos = y;
-		this.xPan = parent.getParentPanel().getCameraPosX();
-		this.yPan = parent.getParentPanel().getCameraPosY();
 		this.height = h;
 		this.width = w;
-		this.scaledHeight = (int) (h * parent.getParentPanel().getZoom());
-		this.scaledWidth = (int) (w * parent.getParentPanel().getZoom());
 		this.xPos_prev = x;
 		this.yPos_prev = y;
+		this.draw_width = (int) (parent.getScale() * w);
+		this.draw_height = (int) (parent.getScale() * h);
+		this.draw_scale = parent.getScale();
 		this.rect = new Rectangle((int) xPos, (int) yPos, (int) width, (int) height); 
 		this.parentWorld = parent;
 		this.parentWorld.getEntities().add(0, this);
-		this.scale = parent.getParentPanel().getZoom();
 	}
 	
 	/**
-	 * Called by HXWorldPanel within its paintComponent() based on HXClock repaint timer.
+	 * Called by ST3WorldPanel within its paintComponent() based on HXClock repaint timer.
 	 * <p>
 	 * Uses interpolation on constant timestep in HXClock to do smooth drawing as well as update the Rectangle object collider.
 	 * @param g - The Graphics object context that will get painted on.
 	 * @param interpolation - Sent by the HXClock to smooth movements when thread stutters or CPU lags.
 	 */
 	public void draw(Graphics g, float interpolation) { 
-		int drawX = (int) ((getxPos() - getxPos_Prev()) * interpolation + getxPos_Prev());
-		int drawY = (int) ((getyPos() - getyPos_Prev()) * interpolation + getyPos_Prev());
-		// Actual image that gets drawn is handled by each entity separately
-		setLastDraw_xPos(drawX);
-		setLastDraw_yPos(drawY);
-		// draw() updates Rectangle location with where it visually is rendered
-//		rect.setLocation((int) xPos, (int) yPos); 
+		draw_xPos = (int) (((xPos - xPos_prev) * interpolation + xPos_prev) * draw_scale);
+		draw_yPos = (int) (((yPos - yPos_prev) * interpolation + yPos_prev) * draw_scale);
+		
+		// Draw image of this entity, does nothing if no img is set
+		g.drawImage( img,
+				draw_xPos, 
+				draw_yPos, 
+				draw_width, 
+				draw_height, 
+				null);
 	}
 	
 	/**
@@ -73,17 +77,6 @@ public abstract class HXEntity {
 	 */
 	public void update() {
 		
-	}
-	
-	public void rescaleSize(int zoom) {
-		scaledHeight = height * zoom;
-		scaledWidth = width * zoom;
-		scale = zoom;
-	}
-	
-	public void panShift(int xS, int yS) {
-		this.xPan = xS;
-		this.yPan = yS;
 	}
 	
 	/**
@@ -108,17 +101,17 @@ public abstract class HXEntity {
 	public void setyPos(double yPos) {
 		this.yPos = yPos;
 	}
-	public int getLastDraw_xPos() {
-		return lastDraw_xPos;
+	public int getDraw_xPos() {
+		return draw_xPos;
 	}
-	public void setLastDraw_xPos(int prevX) {
-		this.lastDraw_xPos = prevX;
+	public void setDraw_xPos(int draw_xPos) {
+		this.draw_xPos = draw_xPos;
 	}
-	public int getLastDraw_yPos() {
-		return lastDraw_yPos;
+	public int getDraw_yPos() {
+		return draw_yPos;
 	}
-	public void setLastDraw_yPos(int prevY) {
-		this.lastDraw_yPos = prevY;
+	public void setDraw_yPos(int draw_yPos) {
+		this.draw_yPos = draw_yPos;
 	}
 	public double getxPos_Prev() {
 		return xPos_prev;
@@ -144,18 +137,6 @@ public abstract class HXEntity {
 	public void setWidth(int width) {
 		this.width = width;
 	}
-	public int getScaledHeight() {
-		return scaledHeight;
-	}
-	public void setScaledHeight(int scaledHeight) {
-		this.scaledHeight = scaledHeight;
-	}
-	public int getScaledWidth() {
-		return scaledWidth;
-	}
-	public void setScaledWidth(int scaledWidth) {
-		this.scaledWidth = scaledWidth;
-	}
 	public Rectangle getRect() {
 		return rect;
 	}
@@ -165,14 +146,27 @@ public abstract class HXEntity {
 	public HXWorld getWorld() {
 		return parentWorld;
 	}
-	public int getScale() {
-		return this.scale;
+	public double getDraw_scale() {
+		return draw_scale;
 	}
-	public int getxPan() {
-		return xPan;
+	public void setDraw_scale(double draw_scale) {
+		this.draw_scale = draw_scale;
+		this.draw_width = (int) (this.width * draw_scale);
+		this.draw_height = (int) (this.height * draw_scale);
 	}
-	public int getyPan() {
-		return yPan;
+	public int getDraw_width() {
+		return draw_width;
 	}
-	
+	public void setDraw_width(int draw_width) {
+		this.draw_width = draw_width;
+	}
+	public int getDraw_height() {
+		return draw_height;
+	}
+	public void setDraw_height(int draw_height) {
+		this.draw_height = draw_height;
+	}	
+	public Image getImg() {
+		return this.img;
+	}
 }
